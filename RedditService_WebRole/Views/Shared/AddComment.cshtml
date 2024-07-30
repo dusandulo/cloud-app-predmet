@@ -1,0 +1,21 @@
+﻿@model RedditService_Data.Comment
+
+@{
+    ViewBag.Title = "Add Comment";
+}
+
+<h2>Add Comment</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label>Comment</label>
+        @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = "5" })
+    </div>
+
+    <input type="hidden" name="topicId" value="@ViewBag.TopicId" />
+
+    <button type="submit" class="btn btn-primary">Add Comment</button>
+}

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<RedditService_Data.User>
+
+@{
+    ViewBag.Title = "All Users";
+}
+
+<h2>All Users</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <tr>
+            <th>Email</th>
+            <th>Last Name</th>
+            <th>Name</th>
+            <th>Phone Number</th>
+            <th>Address</th>
+            <!-- Dodajte ostala polja po potrebi -->
+        </tr>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td><p>@Html.DisplayFor(modelItem => user.Email)</p></td>
+                <td><p>@Html.DisplayFor(modelItem => user.Password)</p></td>
+                <td><p>@Html.DisplayFor(modelItem => user.FirstName)</p></td>
+                <td><p>@Html.DisplayFor(modelItem => user.LastName)</p></td>
+                <!-- Dodajte ostala polja po potrebi -->
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No users found.</p>
+}
