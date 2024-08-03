@@ -282,6 +282,20 @@ namespace RedditService_Data
             return (Comment)retrievedResult.Result;
         }
 
+        public void UpdateComment(Comment comment)
+        {
+            var retrieveOperation = TableOperation.Retrieve<Comment>("Comment", comment.RowKey);
+            var retrievedResult = _commentTable.Execute(retrieveOperation);
+            var existingComment = (Comment)retrievedResult.Result;
+
+            if (existingComment != null)
+            {
+                existingComment.Content = comment.Content;
+                var updateOperation = TableOperation.Replace(existingComment);
+                _commentTable.Execute(updateOperation);
+            }
+        }
+
         // HealthCheckInfo
 
         public void AddHealthCheckInfo(HealthCheckInfo newHealthCheckInfo)

@@ -4,34 +4,67 @@
     ViewBag.Title = "Login";
 }
 
-<h2>Login</h2>
-
-@using (Html.BeginForm("LoginUser", "Login", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email)
-        @Html.TextBox("Email", null, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Email)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password)
-        @Html.Password("Password", null, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Password)
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
-}
-
-@if (ViewData.ModelState.Count > 0)
-{
-    <div class="alert alert-danger">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@error.ErrorMessage</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="~/Content/LayoutStyle.css" rel="stylesheet">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-    </div>
-}
 
-<div class="form-group">
-    @Html.ActionLink("Register User", "ShowRegister", "Register")
-</div>
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <h2 class="text-center">Login</h2>
+
+            @using (Html.BeginForm("LoginUser", "Login", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, htmlAttributes: new { @class = "form-label" })
+                    @Html.TextBox("Email", null, new { @class = "form-control", placeholder = "Enter your email" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, htmlAttributes: new { @class = "form-label" })
+                    @Html.Password("Password", null, new { @class = "form-control", placeholder = "Enter your password" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            }
+
+            @if (ViewData.ModelState.Count > 0)
+            {
+                <div class="alert alert-danger mt-3">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+
+        <div class="form-group mt-3">
+            @Html.ActionLink("Not registered? Click here", "ShowRegister", "Register", null, new { @class = "not-register" })
+        </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

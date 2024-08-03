@@ -164,6 +164,11 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\IndexStyle.css" />
+    <Content Include="Content\LayoutStyle.css" />
+    <Content Include="Content\redditFace.svg" />
+    <Content Include="Content\redditText.svg" />
+    <Content Include="Content\RegisterPage.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -203,6 +208,7 @@
     <Content Include="Views\Shared\Edit.cshtml" />
     <Content Include="Views\Shared\AddComment.cshtml" />
     <Content Include="Views\Shared\_Comment.cshtml" />
+    <Content Include="Views\Shared\EditComment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

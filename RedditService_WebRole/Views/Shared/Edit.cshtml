@@ -2,82 +2,104 @@
 
 @{
     ViewBag.Title = "Edit Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit Profile</h2>
-
-@using (Html.BeginForm("Edit", "EditProfile", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.FirstName)
-        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.FirstName)
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.LastName)
-        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.LastName)
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.Address)
-        @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Address)
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.City)
-        @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.City)
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.Country)
-        @Html.TextBoxFor(m => m.Country, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Country)
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.PhoneNumber)
-        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.PhoneNumber)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password)
-        @Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Password)
-    </div>
-
-    <div>
-        @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+<div class="edit-profile-container mt-5">
+    <h2 class="text-center mb-4">Edit Profile</h2>
+    <div class="card shadow-sm p-4">
+        @using (Html.BeginForm("Edit", "EditProfile", FormMethod.Post, new { enctype = "multipart/form-data", @id = "editProfileForm" }))
         {
-            <img src="@Model.ProfilePictureUrl" alt="Image" style="max-width: 300px;" />
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Address, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.City, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Country, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Country, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Country, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.PhoneNumber, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", @id = "password" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group text-center">
+                @Html.Label("Profile Picture", new { @class = "control-label d-block" })
+                <div class="profile-picture-section mb-3">
+                    @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+                    {
+                        <img src="@Model.ProfilePictureUrl" alt="Profile Picture" class="img-thumbnail rounded-circle" style="max-width: 150px;" />
+                    }
+                    else
+                    {
+                        <div class="no-image-placeholder rounded-circle">
+                            <span>No Image</span>
+                        </div>
+                    }
+                </div>
+                <input type="file" name="file" class="form-control-file" />
+            </div>
+
+            <input type="hidden" name="Email" value="@Model.Email" />
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+            </div>
         }
-        else
+
+        @if (ViewData.ModelState.Count > 0)
         {
-            <span>No Image</span>
+            <div class="alert alert-danger mt-3">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
         }
     </div>
+</div>
 
-    <div class="form-group">
-        @Html.Label("Profile Picture")
-        <input type="file" name="file" class="form-control" />
-    </div>
+<link href="~/Content/Site.css" rel="stylesheet" />
 
-    <input type="hidden" name="Email" value="@Model.Email" />
-
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-}
-
-@if (ViewData.ModelState.Count > 0)
-{
-    <div class="alert alert-danger">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@error.ErrorMessage</p>
-        }
-    </div>
+@section Scripts {
+    <script>
+        document.getElementById("editProfileForm").addEventListener("submit", function (event) {
+            var password = document.getElementById("password").value;
+            if (password.trim() === "") {
+                event.preventDefault();
+                alert("Password cannot be empty");
+            }
+        });
+    </script>
 }

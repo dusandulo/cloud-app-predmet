@@ -14,14 +14,18 @@
                     </div>
                     <div class="text-right">
                         <span class="text-muted">@comment.CreatedAt.ToString("MM/dd/yyyy HH:mm:ss")</span>
-                        @if (!string.IsNullOrEmpty(ViewBag.UserName) && ViewBag.UserName == comment.UserId)
-                        {
-                            <form action="@Url.Action("DeleteComment", "Comment")" method="post">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@comment.RowKey" />
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        }
+                        <div style="display: flex;">
+                            @if (!string.IsNullOrEmpty(ViewBag.UserName) && ViewBag.UserName == comment.UserId)
+                            {
+                                <form action="@Url.Action("DeleteComment", "Comment")" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@comment.RowKey" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+
+                                <a href="@Url.Action("EditComment", "Comment", new { id = comment.RowKey })" class="btn btn-primary btn-sm" style="margin: 0px; padding: 10px">Edit</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </li>

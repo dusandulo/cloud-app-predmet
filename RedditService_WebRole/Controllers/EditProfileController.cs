@@ -40,6 +40,11 @@ namespace RedditService_WebRole.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(User user, HttpPostedFileBase file)
         {
+            if (string.IsNullOrWhiteSpace(user.Password))
+            {
+                ModelState.AddModelError("Password", "Password cannot be empty");
+            }
+
             if (ModelState.IsValid)
             {
                 try

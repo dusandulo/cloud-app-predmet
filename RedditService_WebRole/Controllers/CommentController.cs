@@ -27,6 +27,55 @@ namespace RedditService.Controllers
         }
 
         [HttpGet]
+        public ActionResult EditComment(string id)
+        {
+            string userName = GetUserNameFromCookie();
+            if (!String.IsNullOrEmpty(userName))
+            {
+                var comment = _repository.GetCommentById(id);
+                if (comment != null && comment.UserId == userName)
+                {
+                    return View(comment);
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "You don't have permission to edit this comment.";
+                    return RedirectToAction("Index", "Topics");
+                }
+            }
+            else
+            {
+                return RedirectToAction("ShowLogin", "Login");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditComment(string id, string content)
+        {
+            string userName = GetUserNameFromCookie();
+            if (!String.IsNullOrEmpty(userName))
+            {
+                var comment = _repository.GetCommentById(id);
+                if (comment != null && comment.UserId == userName)
+                {
+                    comment.Content = content;
+                    _repository.UpdateComment(comment);
+                    return RedirectToAction("Index", "Topics");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "You don't have permission to edit this comment.";
+                    return RedirectToAction("Index", "Topics");
+                }
+            }
+            else
+            {
+                return RedirectToAction("ShowLogin", "Login");
+            }
+        }
+
+        [HttpGet]
         public ActionResult Add(string id)
         {
             string userName = GetUserNameFromCookie();

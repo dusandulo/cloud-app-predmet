@@ -9,54 +9,47 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Reddit</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/Style.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-    @Styles.Render("~/Content/Style.css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - RedditClone</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="~/Content/LayoutStyle.css" rel="stylesheet">
+
+    @RenderSection("Styles", required: false)
 </head>
 <body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container" style="max-width: 960px;">
-            @Html.ActionLink("Reddit", "Index", "Topics", new { area = "" }, new { @class = "navbar-brand" })
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            @Html.ActionLink(" ", "Index", "Topics", null, new { @class = "navbar-brand d-flex align-items-center" })
+            <img src="~/Content/redditFace.svg" alt="Reddit Face" class="navbar-logo" />
+            <img src="~/Content/redditText.svg" alt="Reddit Text" class="navbar-logo" />
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        @Html.ActionLink("Home", "Index", "Topics", new { area = "" }, new { @class = "nav-link" })
-                    </li>
-                </ul>
-                <ul class="navbar-nav ml-auto">
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
                     @if (!string.IsNullOrEmpty(userName))
                     {
                         <li class="nav-item">
-                            @Html.ActionLink("Create New", "Create", "Topics", null, new { @class = "nav-link btn btn-success text-white ml-2" })
+                            @Html.ActionLink("Create post", "Create", "Topics", null, new { @class = "nav-link btn btn-outline-success create-new-btn" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Edit Profile", "ShowEdit", "EditProfile", null, new { @class = "nav-link btn btn-info text-white ml-2" })
+                            @Html.ActionLink("Edit Profile", "ShowEdit", "EditProfile", null, new { @class = "nav-link btn btn-outline-info edit-profile-btn" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Logout", "Logout", "Login", null, new { @class = "nav-link btn btn-secondary text-white ml-2" })
+                            @Html.ActionLink("Logout", "Logout", "Login", null, new { @class = "nav-link btn btn-outline-secondary logout-btn" })
                         </li>
                     }
                     else
                     {
                         <li class="nav-item">
-                            @Html.ActionLink("Login", "ShowLogin", "Login", null, new { @class = "nav-link btn btn-primary text-white ml-2" })
+                            @Html.ActionLink("Log In", "ShowLogin", "Login", null, new { @class = "btn btn-outline-primary login-btn" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Register User", "ShowRegister", "Register", null, new { @class = "nav-link btn btn-warning text-white ml-2" })
+                            @Html.ActionLink("Sign Up", "ShowRegister", "Register", null, new { @class = "btn btn-primary signup-btn" })
                         </li>
                     }
                 </ul>
@@ -64,7 +57,7 @@
         </div>
     </nav>
 
-    <div class="container body-content mt-5" style="max-width: 960px;">
+    <div class="container mt-5">
         @RenderBody()
         <hr />
         <footer class="text-center">
@@ -72,8 +65,10 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    <!-- Include section for additional scripts -->
+    @RenderSection("Scripts", required: false)
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

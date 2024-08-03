@@ -1,0 +1,70 @@
+﻿.form-control,
+.form-control-file {
+    width: 100%;
+    padding: .375rem .75rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.img-container {
+    text-align: center; /* Centering the image container */
+    margin-top: 10px;
+}
+
+.img-preview {
+    max-width: 100%; /* Ensure the image doesn't exceed the container width */
+    display: block;
+    margin: 0 auto; /* Center the image inside its container */
+}
+
+.btn-custom {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+}
+
+    .btn-custom:hover {
+        background-color: #0056b3;
+    }
+
+.text-center {
+    text-align: center;
+}
+.btn-custom {
+    display: flex;
+    justify-content: center;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    height: 40px;
+    width: auto;
+}
+
+    .btn-custom:hover {
+        background-color: #0056b3;
+        color: #fff;
+    }
+.btn-custom-back {
+    display: flex;
+    justify-content: center;
+    background-color: #7d898c;
+    color: #fff;
+    border: none;
+    height: 40px;
+    width: auto;
+}
+
+    .btn-custom-back:hover {
+        background-color: #494e4f;
+        color: #fff;
+    }
+.form-control-pwP{
+    width: 100%;
+}

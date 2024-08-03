@@ -4,53 +4,123 @@
     ViewBag.Title = "Create Topic";
 }
 
-<h2 class="text-center mt-4">Create New Topic</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - RedditClone</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="~/Content/LayoutStyle.css?v=1.1" rel="stylesheet" />
+    <style>
+        .navbar-light .navbar-nav .nav-link {
+            color: inherit;
+        }
+        .form-control-file {
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+        }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+        .btn-custom {
+            display: inline-block;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            height: 40px;
+            width:  auto;
+        }
 
-@using (Html.BeginForm("AddTopic", "Topics", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
-{
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            .btn-custom:hover {
+                background-color: #0056b3;
+                color: #fff;
+            }
+        .btn-custom-back {
+            display: inline-block;
+            justify-content: center;
+            background-color: #7d898c;
+            color: #fff;
+            border: none;
+            height: 40px;
+            width: auto;
+        }
+            .btn-custom-back:hover {
+                background-color: darkgray;
+                color: #fff;
+            }
+
+        .img-preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+            .img-preview-container img {
+                max-width: 400px;
+                height: auto;
+            }
+    </style>
+</head>
+<body>
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label" })
-                    @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = 5 })
-                    @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group">
-                    @Html.Label("Upload Image", htmlAttributes: new { @class = "control-label" })
-                    <input type="file" id="studentPicture" name="file" class="form-control-file" onchange="previewImage(this)" />
-                </div>
-                <div class="form-group">
-                    <img id="imagePreview" src="#" alt="Image Preview" class="img-fluid mt-3" style="display:none; max-width: 300px; height: auto;" />
-                </div>
-                <div class="form-group text-center">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+        <h2 class="text-center mb-4">Create New Topic</h2>
+
+        @using (Html.BeginForm("AddTopic", "Topics", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "col-form-label" })
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "col-form-label" })
+                        @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = 5 })
+                        @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Upload Image", htmlAttributes: new { @class = "col-form-label" })
+                        <input type="file" id="fileUpload" name="file" class="form-control-file" onchange="previewImage(this)" />
+                    </div>
+
+                    <div class="form-group img-preview-container">
+                        <img id="imagePreview" src="#" alt="Image Preview" class="img-fluid" style="display:none;" />
+                    </div>
+
+                    <div class="form-group text-center">
+                        <input type="submit" value="Create" class="btn btn-custom" />
+                        @Html.ActionLink("Back to home", "Index", null, new { @class = "btn btn-secondary ml-2 btn-custom-back"})
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-}
-
-<script>
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                var imagePreview = document.getElementById('imagePreview');
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = 'block';
-            };
-            reader.readAsDataURL(input.files[0]);
         }
-    }
-</script>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var imagePreview = document.getElementById('imagePreview');
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>

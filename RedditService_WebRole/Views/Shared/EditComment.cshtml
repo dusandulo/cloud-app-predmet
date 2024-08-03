@@ -1,0 +1,27 @@
+﻿@model RedditService_Data.Comment
+
+@{
+    ViewBag.Title = "Edit Comment";
+}
+
+<h2>Edit Comment</h2>
+
+<style>
+    .navbar-light .navbar-nav .nav-link {
+        color: #333634; /* Reset color or set to a specific value */
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.RowKey)
+    <div class="form-group">
+        @Html.LabelFor(model => model.Content)
+        @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = 5 })
+    </div>
+    <div style="display: flex; gap: 10px; justify-content: center;">
+        <button type="submit" class="btn btn-primary">Save</button>
+        @Html.ActionLink("Cancel", "Index", "Topics", null, new { @class = "btn btn-secondary", style = "margin: auto;" })
+    </div>
+}
