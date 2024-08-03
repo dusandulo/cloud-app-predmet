@@ -277,21 +277,29 @@ namespace RedditService_Data
 
         public void UpvoteComment(string commentId)
         {
-            var comment = GetCommentById(commentId);
+            var retrieveOperation = TableOperation.Retrieve<Comment>("Comment", commentId);
+            var retrievedResult = _commentTable.Execute(retrieveOperation);
+            var comment = (Comment)retrievedResult.Result;
+
             if (comment != null)
             {
-                comment.Upvotes += 1;
-                UpdateComment(comment);
+                comment.Upvote();
+                var updateOperation = TableOperation.Replace(comment);
+                _commentTable.Execute(updateOperation);
             }
         }
 
         public void DownvoteComment(string commentId)
         {
-            var comment = GetCommentById(commentId);
+            var retrieveOperation = TableOperation.Retrieve<Comment>("Comment", commentId);
+            var retrievedResult = _commentTable.Execute(retrieveOperation);
+            var comment = (Comment)retrievedResult.Result;
+
             if (comment != null)
             {
-                comment.Downvotes += 1;
-                UpdateComment(comment);
+                comment.Downvote();
+                var updateOperation = TableOperation.Replace(comment);
+                _commentTable.Execute(updateOperation);
             }
         }
 

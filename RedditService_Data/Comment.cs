@@ -33,5 +33,15 @@ namespace RedditService_Data
             UserId = string.Empty;
             TopicId = string.Empty;
         }
+
+        public void Upvote()
+        {
+            Upvotes++;
+        }
+
+        public void Downvote()
+        {
+            Downvotes++;
+        }
     }
 }
