@@ -12,9 +12,27 @@
                         <span class="text-muted">Created by: @comment.UserId</span>
                         <p>@comment.Content</p>
                     </div>
-                    <div class="text-right">
-                        <span class="text-muted">@comment.CreatedAt.ToString("MM/dd/yyyy HH:mm:ss")</span>
-                        <div style="display: flex;">
+                    <div class="text-right d-flex align-items-center">
+                        <div class="mr-2">
+                            <span class="mr-2">👍 @comment.Upvotes</span>
+                            <span class="mr-2">👎 @comment.Downvotes</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            @if (!string.IsNullOrEmpty(ViewBag.UserName) && ViewBag.UserName != comment.UserId)
+                            {
+                                <form action="@Url.Action("UpvoteComment", "Comment")" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@comment.RowKey" />
+                                    <button type="submit" class="btn btn-outline-success btn-sm mr-2">Like</button>
+                                </form>
+                                <form action="@Url.Action("DownvoteComment", "Comment")" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@comment.RowKey" />
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Dislike</button>
+                                </form>
+                            }
+                        </div>
+                        <div class="d-flex align-items-center">
                             @if (!string.IsNullOrEmpty(ViewBag.UserName) && ViewBag.UserName == comment.UserId)
                             {
                                 <form action="@Url.Action("DeleteComment", "Comment")" method="post" class="d-inline">
@@ -23,7 +41,7 @@
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
 
-                                <a href="@Url.Action("EditComment", "Comment", new { id = comment.RowKey })" class="btn btn-primary btn-sm" style="margin: 0px; padding: 10px">Edit</a>
+                                <a href="@Url.Action("EditComment", "Comment", new { id = comment.RowKey })" class="btn btn-primary btn-sm mr-2" style="margin: 0px;">Edit</a>
                             }
                         </div>
                     </div>

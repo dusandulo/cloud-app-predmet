@@ -25,13 +25,11 @@ namespace RedditService.Controllers
         {
             try
             {
-                // Get user name from cookie
                 var userName = GetUserNameFromCookie();
                 ViewBag.UserName = userName;
 
                 var topics = _repository.RetrieveAllTopics();
 
-                // Separate topics into owned by user and others
                 var userTopics = topics.Where(t => t.UserId == userName).ToList();
                 var otherTopics = topics.Where(t => t.UserId != userName).ToList();
 
@@ -57,23 +55,16 @@ namespace RedditService.Controllers
                         break;
                 }
 
-                // Combine the lists
                 topics = userTopics.Concat(otherTopics).ToList();
 
-                // Log the topics
-                System.Diagnostics.Debug.WriteLine("Retrieved topics count: " + topics.Count);
-                foreach (var topic in topics)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Topic - RowKey: {topic.RowKey}, Title: {topic.Title}, Content: {topic.Content}, ImageUrl: {topic.ImageUrl}");
-                }
+                var comments = _repository.RetrieveAllComments().ToList();
+                ViewBag.Comments = comments;
 
                 return View(topics);
             }
             catch (StorageException ex)
             {
-                // Log the exception details
                 System.Diagnostics.Debug.WriteLine("StorageException: " + ex.Message);
-                // Handle the exception as needed, possibly return an error view
                 return View("Error", new HandleErrorInfo(ex, "Topics", "Index"));
             }
         }
@@ -232,6 +223,7 @@ namespace RedditService.Controllers
 
             _repository.DownvoteTopic(id);
             _repository.RecordUserVote(user.RowKey, id);
+
 
             return RedirectToAction("Index");
         }

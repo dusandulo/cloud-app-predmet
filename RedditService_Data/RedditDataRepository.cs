@@ -275,6 +275,26 @@ namespace RedditService_Data
             }
         }
 
+        public void UpvoteComment(string commentId)
+        {
+            var comment = GetCommentById(commentId);
+            if (comment != null)
+            {
+                comment.Upvotes += 1;
+                UpdateComment(comment);
+            }
+        }
+
+        public void DownvoteComment(string commentId)
+        {
+            var comment = GetCommentById(commentId);
+            if (comment != null)
+            {
+                comment.Downvotes += 1;
+                UpdateComment(comment);
+            }
+        }
+
         public Comment GetCommentById(string commentId)
         {
             var retrieveOperation = TableOperation.Retrieve<Comment>("Comment", commentId);

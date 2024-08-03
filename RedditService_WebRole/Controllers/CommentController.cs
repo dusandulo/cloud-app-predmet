@@ -123,7 +123,6 @@ namespace RedditService.Controllers
             }
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteComment(string id)
@@ -158,6 +157,42 @@ namespace RedditService.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpvoteComment(string id)
+        {
+            string userName = GetUserNameFromCookie();
+            if (!string.IsNullOrEmpty(userName))
+            {
+                var comment = _repository.GetCommentById(id);
+                if (comment != null)
+                {
+                    _repository.UpvoteComment(id);
+                }
+            }
 
+            return RedirectToAction("Index", "Topics");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DownvoteComment(string id)
+        {
+            string userName = GetUserNameFromCookie();
+            if (!string.IsNullOrEmpty(userName))
+            {
+                var comment = _repository.GetCommentById(id);
+                if (comment != null)
+                {
+                    _repository.DownvoteComment(id);
+                    if (comment.Downvotes >= 4)
+                    {
+                        _repository.DeleteComment(id);
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Topics");
+        }
     }
 }

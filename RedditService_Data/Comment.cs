@@ -13,6 +13,8 @@ namespace RedditService_Data
         public DateTime CreatedAt { get; set; }
         public string UserId { get; set; }
         public string TopicId { get; set; }
+        public int Upvotes { get; set; } = 0;
+        public int Downvotes { get; set; } = 0; 
 
         public Comment(string commentId)
         {
