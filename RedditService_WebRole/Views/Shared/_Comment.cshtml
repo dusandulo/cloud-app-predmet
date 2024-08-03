@@ -26,6 +26,10 @@
             <li class="list-group-item">
                 <div class="d-flex justify-content-between">
                     <div>
+
+                        @{ var fullUser = _repository.GetUserByEmail(comment.UserId); }
+
+                        <img src="@fullUser.ProfilePictureUrl" alt="User Image" style="width: 30px; height: 30px; object-fit: cover; border-radius: 50%;" class="mr-2" />
                         <span class="text-muted">Created by: @comment.UserId</span>
                         <p>@comment.Content</p>
                     </div>
