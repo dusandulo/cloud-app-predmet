@@ -82,6 +82,7 @@
     <Compile Include="Topic.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserVote.cs" />
+    <Compile Include="UserVoteComment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

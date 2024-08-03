@@ -18,6 +18,7 @@ namespace RedditService_Data
         private CloudTable _topicTable;
         private CloudTable _commentTable;
         private CloudTable _userVoteTable;
+        private CloudTable _userVoteCommentTable;
         private CloudTable _healthCheckInfoTable;
         private CloudTable _subscriptionTable;
 
@@ -37,6 +38,9 @@ namespace RedditService_Data
 
             _userVoteTable = tableClient.GetTableReference("UserVotes");
             _userVoteTable.CreateIfNotExists();
+
+            _userVoteCommentTable = tableClient.GetTableReference("UserVotesComment");
+            _userVoteCommentTable.CreateIfNotExists();
 
             _healthCheckInfoTable = tableClient.GetTableReference("HealthCheckInfo");
             _healthCheckInfoTable.CreateIfNotExists();
@@ -322,6 +326,23 @@ namespace RedditService_Data
                 var updateOperation = TableOperation.Replace(existingComment);
                 _commentTable.Execute(updateOperation);
             }
+        }
+
+
+        //Record user comment
+
+        public bool HasUserVotedComment(string userId, string commentId)
+        {
+            var retrieveOperation = TableOperation.Retrieve<UserVoteComment>(userId, commentId);
+            var result = _userVoteCommentTable.Execute(retrieveOperation);
+            return result.Result != null;
+        }
+
+        public void RecordUserVoteComment(string userId, string commentId)
+        {
+            var userVoteComment = new UserVoteComment(userId, commentId);
+            var insertOperation = TableOperation.Insert(userVoteComment);
+            _userVoteCommentTable.Execute(insertOperation);
         }
 
         // HealthCheckInfo

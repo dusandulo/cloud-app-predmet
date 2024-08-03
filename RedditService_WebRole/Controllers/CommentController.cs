@@ -157,10 +157,19 @@ namespace RedditService.Controllers
             }
         }
 
+        private User GetUser()
+        {
+            var username = GetUserNameFromCookie();
+            if (username == null) return null;
+            return _repository.GetUserByEmail(username);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult UpvoteComment(string id)
         {
+            var user = GetUser();
+
             string userName = GetUserNameFromCookie();
             if (!string.IsNullOrEmpty(userName))
             {
@@ -168,6 +177,7 @@ namespace RedditService.Controllers
                 if (comment != null)
                 {
                     _repository.UpvoteComment(id);
+                    _repository.RecordUserVoteComment(user.RowKey, id);
                 }
             }
 
@@ -178,6 +188,8 @@ namespace RedditService.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DownvoteComment(string id)
         {
+            var user = GetUser();
+
             string userName = GetUserNameFromCookie();
             if (!string.IsNullOrEmpty(userName))
             {
@@ -185,6 +197,8 @@ namespace RedditService.Controllers
                 if (comment != null)
                 {
                     _repository.DownvoteComment(id);
+                    _repository.RecordUserVoteComment(user.RowKey, id);
+
                     if (comment.Downvotes >= 4)
                     {
                         _repository.DeleteComment(id);
