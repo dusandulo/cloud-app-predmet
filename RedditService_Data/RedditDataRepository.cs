@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure;
 using System.Runtime.Remoting.Contexts;
 using Common.Models;
+using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace RedditService_Data
 {
@@ -273,9 +274,10 @@ namespace RedditService_Data
 
             if (comment != null)
             {
-                // Delete the comment
                 var deleteOperation = TableOperation.Delete(comment);
                 _commentTable.Execute(deleteOperation);
+
+                NotifyCommentDeletion(comment); // send mail for delete nottification
             }
         }
 
@@ -386,6 +388,20 @@ namespace RedditService_Data
             );
 
             return _subscriptionTable.ExecuteQuery(query);
+        }
+
+
+        // nottification for comment delete
+
+        private void NotifyCommentDeletion(Comment comment)
+        {
+            CloudQueueClient queueClient = _storageAccount.CreateCloudQueueClient();
+            CloudQueue queue = queueClient.GetQueueReference("notificationsqueue");
+            queue.CreateIfNotExists();
+
+            string messageBody = $"Deleted|{comment.RowKey}|{comment.UserId}|{comment.TopicId}";
+            CloudQueueMessage message = new CloudQueueMessage(messageBody);
+            queue.AddMessage(message);
         }
 
     }

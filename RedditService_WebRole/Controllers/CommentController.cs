@@ -199,7 +199,10 @@ namespace RedditService.Controllers
                     _repository.DownvoteComment(id);
                     _repository.RecordUserVoteComment(user.RowKey, id);
 
-                    if (comment.Downvotes >= 4)
+                    // Reload the comment to get the updated downvote count.
+                    comment = _repository.GetCommentById(id);
+
+                    if (comment.Downvotes >= 4) // Now this should reflect the updated state.
                     {
                         _repository.DeleteComment(id);
                     }

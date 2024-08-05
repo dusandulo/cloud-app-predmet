@@ -66,32 +66,33 @@ namespace NotificationService
 
         private async Task RunAsync(CancellationToken cancellationToken)
         {
-            // Cloud Storage account connection
-            var storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("DataConnectionString"));
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient(); 
-            CloudQueue queue = queueClient.GetQueueReference("notificationsqueue"); 
-
-            try
-            {
-                queue.CreateIfNotExists();
-            }
-            catch (StorageException ex)
-            {
-                Trace.TraceError("Error creating queue: " + ex.Message);
-                throw;
-            }
-
             var repository = new RedditDataRepository();
+
+            var storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("DataConnectionString"));
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+            CloudQueue queue = queueClient.GetQueueReference("notificationsqueue");
 
             while (!cancellationToken.IsCancellationRequested)
             {
                 Trace.TraceInformation("Checking queue for new messages.");
-
                 CloudQueueMessage message = await queue.GetMessageAsync();
                 if (message != null)
                 {
-                    string commentId = message.AsString;
-                    ProcessMessage(repository, commentId);
+                    string[] messageParts = message.AsString.Split('|');
+                    if (messageParts[0] == "Deleted")
+                    {
+                        // Handle deletion notification
+                        string commentId = messageParts[1];
+                        string userId = messageParts[2];
+                        string topicId = messageParts[3];
+                        NotifyAuthorOfDeletion(userId, commentId, topicId);
+                    }
+                    else if (messageParts[0] == "New")
+                    {
+                        // Handle new comment notification
+                        string commentId = messageParts[1];
+                        ProcessNewCommentMessage(repository, commentId);
+                    }
 
                     await queue.DeleteMessageAsync(message);
                 }
@@ -99,45 +100,54 @@ namespace NotificationService
                 await Task.Delay(15000); // Check every 15 seconds
             }
         }
+        private void NotifyAuthorOfDeletion(string userId, string commentId, string topicId)
+        {
+            var repository = new RedditDataRepository();
 
-        private void ProcessMessage(RedditDataRepository repository, string commentId)
+            var user = repository.GetUserByEmail(userId);
+            if (user != null)
+            {
+                string email = user.Email;
+                string body = $"Your comment on topic {topicId} with ID: {commentId} has been deleted.";
+                SendEmail(email, body, "Comment Deletion Notification");
+            }
+        }
+
+        private void ProcessNewCommentMessage(RedditDataRepository repository, string commentId)
         {
             var comment = repository.GetCommentById(commentId);
-
             if (comment != null)
             {
                 var topicId = comment.TopicId;
                 var subscribers = repository.GetSubscribersByTopicId(topicId);
-
                 foreach (var subscriber in subscribers)
                 {
-                    SendEmail(subscriber.Email, comment);
+                    string body = $"New comment on topic: {comment.TopicId}\n\n" +
+                                  $"Comment: {comment.Content}\n" +
+                                  $"Posted by: {comment.UserId}\n" +
+                                  $"At: {comment.CreatedAt}";
+                    SendEmail(subscriber.Email, body, "New Comment Notification");
                 }
             }
         }
 
-        private void SendEmail(string email, Comment comment)
+        private void SendEmail(string email, string body, string subject)
         {
             var smtpClient = new SmtpClient("sandbox.smtp.mailtrap.io")
             {
-                Port = 2525, // Mailtrap's recommended port
+                Port = 2525,
                 Credentials = new NetworkCredential("c94feac755e586", "46f367e560adf7"),
-                EnableSsl = false, // Typically SSL is not required for Mailtrap on port 2525
+                EnableSsl = false,
             };
-
-            string body = $"New comment on topic: {comment.TopicId}\n\n" +
-                          $"Comment: {comment.Content}\n" +
-                          $"Posted by: {comment.UserId}\n" +
-                          $"At: {comment.CreatedAt}";
 
             try
             {
-                smtpClient.Send("from@example.com", email, "New Comment Notification", body); // Set a placeholder sender email
-                Trace.TraceInformation($"{email} got message: {body}");
+                smtpClient.Send("from@example.com", email, subject, body);
+                Trace.TraceInformation($"{email} got message: {subject}");
             }
             catch (Exception ex)
             {
-                Trace.TraceError("Failed to send email. Error: " + ex.Message);
+                Trace.TraceError($"Failed to send email. Error: {ex.Message}");
             }
         }
     }
